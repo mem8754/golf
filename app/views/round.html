@@ -1,0 +1,82 @@
+ <div class="container">
+    <div  class="col-md-6">
+        <h2>Player Details</h2>
+        <br/>
+    </div>
+    <div class="col-md-10">
+        <small>
+            <p><b>Name: </b>{{ player.lastName }}, {{ player.firstName }}</p>
+            <p><b>Email: </b>{{ player.email }}</p>
+            <p><b>Phone: </b>{{ player.phone }}</p>
+            <p><b>Hdcp: </b>{{ player.hdcp }}</p>
+            <p><b>GHIN: </b>{{ player.ghinNo }}</p>
+            <br/>
+            <br/>
+        </small>
+        <h4><b>Rounds for {{ player.firstName }} {{player.lastName }}</b></h4>
+        <a href="#/addRound/{{ player.email }}">Add Round</a><br/><br/>
+        <table class="table table-condensed table-bordered" style="font-size: 80%;">
+            <tr>
+                <th>Date</th>
+                <th>Course Name</th>
+                <th>Tees</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+                <th>8</th>
+                <th>9</th>
+                <th>&nbsp;</th>
+                <th>Front</th>
+                <th>&nbsp;</th>
+                <th>10</th>
+                <th>11</th>
+                <th>12</th>
+                <th>13</th>
+                <th>14</th>
+                <th>15</th>
+                <th>16</th>
+                <th>17</th>
+                <th>18</th>
+                <th>&nbsp;</th>
+                <th>Back</th>
+                <th>&nbsp;</th>
+                <th>Total</th>
+            </tr>
+            <tr ng-repeat="round in player.rounds">
+                <td>{{ round.date | date: 'shortDate' }}</td>
+                <td>{{ round.course }}</td>
+                <td>{{ round.tee }}</td>
+                <td>{{ round.netScore[0] }}</td>
+                <td>{{ round.netScore[1] }}</td>
+                <td>{{ round.netScore[2] }}</td>
+                <td>{{ round.netScore[3] }}</td>
+                <td>{{ round.netScore[4] }}</td>
+                <td>{{ round.netScore[5] }}</td>
+                <td>{{ round.netScore[6] }}</td>
+                <td>{{ round.netScore[7] }}</td>
+                <td>{{ round.netScore[8] }}</td>
+                <th>&nbsp;</th>
+                <td>{{ round.netScore[18] }}</td>
+                <td>&nbsp;</td>
+                <td>{{ round.netScore[9] }}</td>
+                <td>{{ round.netScore[10] }}</td>
+                <td>{{ round.netScore[11] }}</td>
+                <td>{{ round.netScore[12] }}</td>
+                <td>{{ round.netScore[13] }}</td>
+                <td>{{ round.netScore[14] }}</td>
+                <td>{{ round.netScore[15] }}</td>
+                <td>{{ round.netScore[16] }}</td>
+                <td>{{ round.netScore[17] }}</td>
+                <th>&nbsp;</th>
+                <td>{{ round.netScore[19] }}</td>
+                <th>&nbsp;</th>
+                <td>{{ round.netScore[20] }}</td>
+            </tr>
+        </table>
+        </small>
+    </div>
+</div>

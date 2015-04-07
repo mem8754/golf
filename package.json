@@ -1,0 +1,20 @@
+{
+  "name": "golf-app",
+  "version": "1.0.0",
+  "description": "Phoenix Golf Guys Website",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "method-override": "*",
+    "mongoose": "*",
+    "nodemon": "*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "MEM",
+  "license": "ISC"
+}

@@ -1,0 +1,7 @@
+node_modules
+bin
+data
+*~
+npm-debug.log
+app/demoMongoRoutes.js
+credentials.js

@@ -1,0 +1,50 @@
+<!doctype html>
+<html ng-app="golfApp">
+<head>
+    <title>Phoenix Golf Guys</title>
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="styles/select.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="container">
+    <h1><a href="#">Phoenix Golf Guys</a></h1>
+        <div class="container-fluid">
+            <ul class="nav nav-pills">
+                <li><a href="#">Home</a></li>
+                <li><a href="#/players">Players</a></li>
+                <li><a href="#/courses">Courses</a></li>
+                <li><a href="#/schedule">Schedule</a></li>
+            </ul>
+        </div>
+        <div>
+<!--            
+            <img src="http://www.arizonagrandresort.com/wp-content/uploads/2014/08/banner-golf-page.jpg">
+ -->
+        </div>
+    </div>
+    
+    <div ng-view></div>
+<!--   framework scripts and routing -->    
+    <script src="scripts/angular.js"></script>
+    <script src="scripts/angular-route.js"></script>
+    <script src="scripts/angular-sanitize.min.js"></script>
+    <script src="scripts/select.min.js"></script>
+    <script src="app/golfApp.js"></script>
+<!--   course-related controllers  -->
+    <script src="app/controllers/coursesController.js"></script>
+    <script src="app/controllers/viewCourseController.js"></script>
+    <script src="app/controllers/addCourseController.js"></script>
+    <script src="app/controllers/editCourseController.js"></script>
+    <script src="app/controllers/addTeeBoxController.js"></script>
+<!--   player-related controllers   -->
+    <script src="app/controllers/playersController.js"></script>
+    <script src="app/controllers/playerDetailsController.js"></script>
+<!--   round-related controllers   -->
+   <script src="app/controllers/addRoundController.js"></script>
+    <script src="app/controllers/editRoundController.js"></script>
+<!--   factories and services   -->
+    <script src="app/services/coursesFactory.js"></script>
+    <script src="app/services/playersFactory.js"></script>
+    <script src="app/services/roundsFactory.js"></script>
+</body>
+</html>
