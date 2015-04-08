@@ -1,12 +1,14 @@
 var express = require('express'),
     mongoose = require('mongoose'),
     bodyParser = require('body-parser'),
+    cookieParser = require('cookie-parser'),
     methodOverride = require('method-override'),
     app = express();
 
-var mongoLabConnectionString =  'mongodb://mem:1234@ds031531.mongolab.com:31531/golfdb';
-var localhostConnectionString = "mongodb://mem:1234@localhost:27017/golfdb";
+// var mongoLabConnectionString =  'mongodb://mem:1234@ds031531.mongolab.com:31531/golfdb';
+// var localhostConnectionString = "mongodb://mem:1234@localhost:27017/golfdb";
  
+var credentials = require('./credentials.js');          /* database access credentials for MongoDB      */
 var Courses = require('./app/models/courses.js');       /* schema for GETting  and PUTting course data  */
 var NewCourse = require('./app/models/newCourse.js');   /* schema for POSTing a new course              */
 var Players = require('./app/models/players.js');       /* schema for GETting player data               */
@@ -22,8 +24,8 @@ var opts = { server : { socketOptions : { keepAlive : 1 } } };
 //  Connect to the database
 //      Comment out either the localhost or the MongoLab connection string below:
 //===================================================================================
-// mongoose.connect(localhostConnectionString, opts);           /* local mongodb   */
-mongoose.connect(mongoLabConnectionString, opts);            /* mongoLab        */
+// mongoose.connect(credentials.mongo.local.connectionString, opts);              /* local mongodb   */
+mongoose.connect(credentials.mongo.remote.connectionString, opts);            /* mongoLab        */
 
 //===================================================================================
 //  Middleware:
@@ -41,6 +43,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // override with the X-HTTP-Method-Override header in the request. simulate DELETE/PUT
 app.use(methodOverride('X-HTTP-Method-Override'));
+
+// parse cookies with cookie-parser and cookieSecret
+app.use(cookieParser(credentials.cookieSecret));
 
 // set the static files location /public/img will be /img for users
 
@@ -158,8 +163,17 @@ app.get('/players/:playerId', function (req, res) {
 //==============================================================================================
 app.get('/player/hcp/:playerId', function (req, res) {
     'use strict';
-    console.log('Route handler for /players/hcp/:', req.params.playerId);
+    console.log('Get Route handler for /players/hcp/:', req.params.playerId);
     Players.findById(req.params.playerId, { _id: 1, lastName: 1, firstName: 1, hdcp: 1 }, function (err, data) {
+        res.json(data);
+    });
+});
+
+app.put('/player/hcp/:playerId', function (req, res) {
+    'use strict';
+    console.log('Put Route handler for /players/hcp/:', req.params.playerId);
+    console.log('Body: ', req.body);
+    Players.update({ _id: req.params.playerId }, { $set: { hdcp: req.body.hdcp }}, function (err, data) {
         res.json(data);
     });
 });

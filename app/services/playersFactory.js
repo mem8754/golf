@@ -17,13 +17,17 @@
             return $http.get('/player/hcp/' + playerId);
         };
         
-        factory.updatePlayerHdcp = function (player, rounds) {
-            return calcHandicapIndex(rounds);           /* for now; eventually update "player" in db */
+        factory.calcPlayerHdcp = function (rounds) {
+            return calcHandicapIndex(rounds);
+        };
+        
+        factory.updatePlayerHdcp = function (player, hcp) {
+            return $http.put('/player/hcp/' + player._id, { hdcp: hcp });
         };
 
             
 //==========================================================================================
-//  updatePlayerHdcp Function
+//  calcHandicapIndex Function
 //
 //  This function calculates a handicap index from posted rounds. Input parameter(s):
 //      - "rounds" array of objects containing all of the players posted rounds.
