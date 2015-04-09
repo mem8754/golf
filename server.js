@@ -87,12 +87,12 @@ app.get('/teesByCourse/:courseId', function (req, res) {
 //==============================================================================================
 // "/updateTee/:id" PUT route handler
 //==============================================================================================
-app.put('/updateTee/:id', function (req, res) {
+app.put('/updateTee', function (req, res) {
     'use strict';
     var tee = new Tees(req.body);
-    console.log('Route handler for /updateTee/', req.params.id);
+    console.log('Route handler for /updateTee:', tee._id);
 
-    Tees.findByIdAndUpdate(req.params.id, req.body, function (err, data) {
+    Tees.findByIdAndUpdate(tee._id, req.body, function (err, data) {
         if (err) {
             console.log("Mongoose error updating tee: ", req.params.id);
             console.log("Error: ", err);

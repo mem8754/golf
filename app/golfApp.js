@@ -27,6 +27,10 @@
                 controller: 'AddTeeBoxController',
                 templateUrl: 'app/views/addTeeBox.html'
             })
+            .when('/editTeeBox/:teeId', {
+                controller: 'EditTeeBoxController',
+                templateUrl: 'app/views/editTeeBox.html'
+            })
             .when('/players', {
                 controller: 'PlayersController',
                 templateUrl: 'app/views/players.html'

@@ -121,7 +121,7 @@
                     <td>{{ course.par[20] }}</td>
                 </tr>
                 <tr ng-repeat="tee in tees">
-                    <td style="text-align:left">{{ tee.teeName }}</td>
+                     <td style="text-align:left"><a href="#/editTeeBox/{{ tee._id }}">{{ tee.teeName }}</td>
                     <td>{{ tee.rating | number:1 }}</td>
                     <td>{{ tee.slope | number:0 }}</td>
                     <td><b>Yards</b></td>
@@ -154,6 +154,34 @@
             </table>
         </small>
         <br/><br/>
-        <p>{{ teeMessage }}</p>
+        <div class="col-xs-12">
+            <small>
+                <h4><b>Posted Rounds ({{ rounds.length }} total):</b></h4>
+                <table class="table table-condensed table-bordered" style="text-align:center">
+                    <tr>
+                        <th style="text-align:center">Date / Time</th>
+                        <th style="text-align:center">Player</th>
+                        <th style="text-align:center">Front</th>
+                        <th style="text-align:center">Back</th>
+                        <th style="text-align:center">Gross</th>
+                        <th style="text-align:center">CrsHcp</th>
+                        <th style="text-align:center">Net</th>
+                        <th style="text-align:center">Diff</th>
+                        <th style="text-align:center">Adj</th>
+                    </tr>
+                    <tr ng-repeat="round in rounds | orderBy:'date':'true'">
+                        <td>{{ round.date | date: 'yyyy.MM.dd @ h:mm a' }}</a></td>
+                        <td>{{ round.playerName }}</td>
+                        <td>{{ round.grossScore[18] }}</td>
+                        <td>{{ round.grossScore[19] }}</td>
+                        <td>{{ round.grossScore[20] }}</td>
+                        <td>{{ round.crsHdcp }}</td>
+                        <td>{{ round.netScore }}</td>
+                        <td>{{ round.hdcpDiff | number:1 }}</td>
+                        <td>{{ round.adjGrossScore[20] }}</td>
+                    </tr>
+                </table>
+            </small>
+        </div>
     </div>
 </div>

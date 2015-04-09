@@ -1,10 +1,11 @@
 (function () {
     'use strict';
-    var ViewCourseController = function ($scope, $routeParams, coursesFactory) {
+    var ViewCourseController = function ($scope, $window, $log, $routeParams, coursesFactory, roundsFactory, playersFactory) {
         var courseId = $routeParams.courseId,
             tee = {};
         $scope.course = null;
-        $scope.teeMessage = "";
+        $scope.rounds = null;
+        $scope.tees = null;
         
         function init() {
             coursesFactory.getCourse(courseId)
@@ -28,6 +29,28 @@
                             console.log('Status: ' + status);
                             console.log('Headers: ' + headers);
                             console.log('Config: ' + config);
+                        });
+                    
+                    roundsFactory.getCourseRounds(courseId)
+                        .error(function (data, status, headers, config) {
+                            $log.error('Server error getting course rounds.');
+                        })
+                        .success(function(rounds) {
+                            playersFactory.getPlayers()
+                                .error(function(data, status, headers, config) {
+                                    $log.error('Server error getting player names.');
+                                })
+                                .success(function (players) {
+                                    for (var i in rounds) {
+                                        for (var j in players) {
+                                            if (rounds[i].playerId == players[j]._id) {
+                                                rounds[i].playerName = players[j].firstName + " " + players[j].lastName;
+                                                break;
+                                            };
+                                        };
+                                    };
+                                });
+                            $scope.rounds = rounds;
                         });
                 });
         }
@@ -57,7 +80,7 @@
         
     };
     
-    ViewCourseController.$inject = ['$scope', '$routeParams', 'coursesFactory'];
+    ViewCourseController.$inject = ['$scope', '$window', '$log', '$routeParams', 'coursesFactory', 'roundsFactory', 'playersFactory'];
 
     angular.module('golfApp')
         .controller('ViewCourseController', ViewCourseController);

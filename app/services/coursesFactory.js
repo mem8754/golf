@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    var coursesFactory = function ($http) {
+    var coursesFactory = function ($http, $log) {
         
         var factory = {};
 //            courses = null;
@@ -22,19 +22,29 @@
         };
         
         factory.addTee = function (tee) {
-            console.log('coursesFactory addTee: ', tee);
+            $log.log('coursesFactory addTee: ', tee);
             return $http.post('/addTee', tee);
+        };
+        
+        factory.getTee = function (teeId) {
+            $log.log('coursesFactory getTee: ', teeId);
+            return $http.get('/tees/' + teeId);
+        };
+        
+        factory.updateTee = function (tee) {
+            $log.log('coursesFactory updateTee: ', tee);
+            return $http.put('/updateTee', tee);
         };
 
         factory.getCourseHdcp = function (courseId) {
             return $http.get('/courses/hcp/' + courseId);
         };
         factory.addCourse = function (course) {
-            console.log('courseFactory addCourse: ', course);
+            $log.log('courseFactory addCourse: ', course);
             return $http.post('/courses/addCourse', course);
         };
         factory.updateCourse = function (course) {
-            console.log('coursesFactory updateCourse: ', course);
+            $log.log('coursesFactory updateCourse: ', course);
             return $http.put('/courses/updateCourse', course);
         };
         
@@ -42,7 +52,7 @@
         return factory;
     };
     
-    coursesFactory.$inject = ['$http'];
+    coursesFactory.$inject = ['$http', '$log'];
     
     angular.module('golfApp').factory('coursesFactory', coursesFactory);
     
