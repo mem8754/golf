@@ -1,5 +1,72 @@
 <div>
-    <h4><strong>Schedule Not Implemented</strong></h4>
-    <br/>
-    <p>Sorry, please come back later, this capability is still under development.</p>
+    <h4><strong>Schedule of Tee Times</strong></h4>
+</div>
+<div class="container">
+    <div class="row col-xs-12">
+        <h4>
+            <strong>
+                Scheduled Tee Times:
+            </strong>
+        </h4>
+        <br />
+    </div>
+    <div class="row">
+        <div class="row col-xs-12">
+            <table class="table table-condensed table-bordered">
+                <tr>
+                    <th>Date / Time</th>
+                    <th>Course</th>
+                    <th>Player 1</th>
+                    <th>Player 2</th>
+                    <th>Player 3</th>
+                    <th>Player 4</th>
+                    <th>Notes</th>
+                </tr>
+                <tr ng-repeat="teeTime in scheduledTeeTimes | orderBy:'dateTime':true">
+                    <td><a href="#/editTeeTime/{{ teeTime._id }}">{{ teeTime.dateTime }}</td>
+                    <td><a href="#/viewCourse/{{ teeTime.courseId }}">{{ teeTime.courseTag }}</td>
+                    <td>{{ teeTime.playerName[0] }}</td>
+                    <td>{{ teeTime.playerName[1] }}</td>
+                    <td>{{ teeTime.playerName[2] }}</td>
+                    <td>{{ teeTime.playerName[3] }}</td>
+                    <td>{{ teeTime.notes }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br/><br/>
+    <div class="row col-xs-12">
+        <h4>
+            <strong>
+                Past Tee Times:
+            </strong>
+        </h4>
+        <br />
+    </div>
+    <div class="row">
+        <div class="row col-xs-12">
+            <table class="table table-condensed table-bordered">
+                <tr>
+                    <th>Date / Time</th>
+                    <th>Course</th>
+                    <th>Player 1</th>
+                    <th>Player 2</th>
+                    <th>Player 3</th>
+                    <th>Player 4</th>
+                    <th>Notes</th>
+                </tr>
+                <tr ng-repeat="teeTime in pastTeeTimes | orderBy:'dateTime'">
+                    <td><a href="#/editTeeTime/{{ teeTime._id }}">{{ teeTime.dateTime }}</td>
+                    <td><a href="#/viewCourse/{{ teeTime.courseId }}">{{ teeTime.courseTag }}</td>
+                    <td>{{ teeTime.playerName[0] }}</td>
+                    <td>{{ teeTime.playerName[1] }}</td>
+                    <td>{{ teeTime.playerName[2] }}</td>
+                    <td>{{ teeTime.playerName[3] }}</td>
+                    <td>{{ teeTime.notes }}</td>
+                </tr>
+            </table>
+            <br />
+            <span>Total Past Tee Times: {{ pastTeeTimes.length }}</span>
+        </div>
+    </div>
 </div>

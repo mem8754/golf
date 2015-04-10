@@ -9,6 +9,10 @@
             return $http.get('/courses');
         };
         
+        factory.getCourseNames = function () {
+            return $http.get('/courses/names');
+        };
+        
         factory.getCourse = function (courseId) {
             return $http.get('/courses/' + courseId);
         };

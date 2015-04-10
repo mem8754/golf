@@ -9,6 +9,10 @@
             return $http.get('/players');
         };
         
+        factory.getPlayerNames = function () {
+            return $http.get('players/names');
+        };
+        
         factory.getPlayer = function (playerId) {
             return $http.get('/players/' + playerId);
         };

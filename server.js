@@ -15,17 +15,16 @@ var Players = require('./app/models/players.js');       /* schema for GETting pl
 var Rounds = require('./app/models/rounds.js');         /* schema for GETting and PUTting round data    */
 var Tees = require('./app/models/tees.js');             /* schema for GETting tee information           */
 var NewTee = require('./app/models/newTee.js');         /* schema for POSTing a new tee box             */
+var Events = require('.app/models/events.js');          /* schema for GETting event data                */
 
 app.set('port', process.env.PORT || 3000);
-
-var opts = { server : { socketOptions : { keepAlive : 1 } } };
 
 //===================================================================================
 //  Connect to the database
 //      Comment out either the localhost or the MongoLab connection string below:
 //===================================================================================
-// mongoose.connect(credentials.mongo.local.connectionString, opts);              /* local mongodb   */
-mongoose.connect(credentials.mongo.remote.connectionString, opts);            /* mongoLab        */
+mongoose.connect(credentials.mongo.dbURI.local, credentials.mongo.dbOptions.local);              /* local mongodb   */
+// mongoose.connect(credentials.mongo.dbURI.remote, credentials.mongo.dbOptions.remote);            /* mongoLab        */
 
 //===================================================================================
 //  Middleware:
@@ -54,6 +53,34 @@ app.use(express.static(__dirname + '/'));
 //==============================================================================================
 //  Route Handlers
 //==============================================================================================
+
+//==============================================================================================
+//  Event-related routes:
+//      /events/teeTimes/before - retrieves tee time events prior to a specific date/time
+//      /events/teeTimes/after - retrieves tee time events subsequent to a specific date/time
+//==============================================================================================
+
+//==============================================================================================
+// "/events/teeTimes/before" route handler  
+//==============================================================================================
+app.get('/events/teeTimes/before', function (req, res) {
+    'use strict';
+    console.log('Route handler for /events/teeTimes/before');
+    Events.find({eventType: "Tee Time", dateTime: "$lt: date"}, function (err, teeTimes) {
+        res.json(teeTimes);
+    });
+});
+
+//==============================================================================================
+// "/events/teeTimes/after" route handler  
+//==============================================================================================
+app.get('/events/teeTimes/after', function (req, res) {
+    'use strict';
+    console.log('Route handler for /events/teeTimes/after');
+    Events.find({eventType: "Tee Time", dateTime: "$gt: date"}, function (err, teeTimes) {
+        res.json(teeTimes);
+    });
+});
 
 //==============================================================================================
 //  Tee-related routes:
@@ -134,6 +161,7 @@ app.post('/addTee', function (req, res) {
 //==============================================================================================
 //  Player-related routes:
 //      /players - retrieves all players
+//      /players/names - retrieves player names (first and last) for all players
 //      /players/:playerId - retrieves specific player
 //      /players/hcp/:playerId - retrieves player handicap index
 //==============================================================================================
@@ -146,10 +174,23 @@ app.get('/players', function (req, res) {
         res.json(players);
     });
 });
-//
+
+//==============================================================================================
+// "/players/names" route handler
+//==============================================================================================
+
+app.get('/players/names', function (req, res) {
+    'use strict';
+    console.log('Route handler for /players/names');
+    Players.find({}, { _id: 1, firstName: 1, lastName: 1 }, function (err, names) {
+        res.json(names);
+    });
+});
+
 //==============================================================================================
 // "/players/:playerId" route handler  
 //==============================================================================================
+
 app.get('/players/:playerId', function (req, res) {
     'use strict';
     console.log('Route handler for /players/:', req.params.playerId);
@@ -157,10 +198,11 @@ app.get('/players/:playerId', function (req, res) {
         res.json(player);
     });
 });
-//
+
 //==============================================================================================
 // "/players/hcp/:playerId" route handler  
 //==============================================================================================
+
 app.get('/player/hcp/:playerId', function (req, res) {
     'use strict';
     console.log('Get Route handler for /players/hcp/:', req.params.playerId);
@@ -181,6 +223,7 @@ app.put('/player/hcp/:playerId', function (req, res) {
 //==============================================================================================
 //  Course-related routes:
 //      /courses - retrieves all courses
+//      /courses/names = retrieves all course tags
 //      /courses/:courseId - retrieves specific course
 //      /courses/id/:courseTag - retrieve course ID (and name) given course Tag
 //      /courses/hcp/:courseId - retrieves course rating and slope rating for specified course
@@ -190,11 +233,24 @@ app.put('/player/hcp/:playerId', function (req, res) {
 //==============================================================================================
 // "/courses" route handler  
 //==============================================================================================
+
 app.get('/courses', function (req, res) {
     'use strict';
     console.log('Route handler for /courses');
     Courses.find({}, function (err, courses) {
         res.json(courses);
+    });
+});
+
+//==============================================================================================
+// "/courses/names" route handler
+//==============================================================================================
+
+app.get('/courses', function (req, res) {
+    'use strict';
+    console.log('Route handler for /courses/names');
+    Courses.find({}, { _id: 1, tag: 1 }, function (err, tags) {
+        res.json(tags);
     });
 });
 
