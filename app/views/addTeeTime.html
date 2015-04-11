@@ -1,0 +1,136 @@
+<div class="container">
+    <div class="col-xs-12">
+        <h4>
+            <strong>
+                Add a {{ event.eventType }}
+            </strong>
+        </h4>
+        <br />
+        <form class="form-horizontal" ng-submit="addTeeTime()">
+            <div class="form-group">
+                <label for="date" class="col-xs-1 control-label">Date/Time:</label>
+                <div class="col-xs-3">
+                    <input type="datetime-local" class="form-control col-xs-2" ng-model="event.dateTime">
+                </div>
+            </div>
+            <!--             Form label and input field for Course input  -->
+            <div class="form-group">
+                <label for="crs" class="col-xs-1 control-label">Course:</label>
+                <div class="col-xs-3">
+                    <ui-select ng-model="event.courseId" 
+                               search-enabled="true" 
+                               reset-search-input="true" 
+                               theme="bootstrap">
+                        <ui-select-match placeholder="Select course" 
+                                         allow-clear="true">
+                            {{ $select.selected.tag }}
+                        </ui-select-match>
+                        <ui-select-choices group-by="'state'" 
+                                           repeat="course._id as course in courses | 
+                                                   filter: $select.search | 
+                                                   orderBy: 'tag' track by course._id">
+                            <div ng-bind-html="course.tag | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <br/>
+            </div>
+            <!--             Form label and input field for Player 1 input  -->
+            <div class="form-group">
+                <label class="col-xs-1 control-label">Player 1:</label>
+                <div class="col-xs-2">
+                    <ui-select ng-model="event.players[0]" 
+                               search-enabled="true" 
+                               reset-search-input="true" 
+                               theme="bootstrap">
+                        <ui-select-match placeholder="Select Player 1">
+                            {{ $select.selected.lastName }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="player._id as player in players | 
+                                                   orderBy: 'lastName' track by player._id">
+                            <div ng-bind-html="player.lastName"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <!--             Form label and input field for Player 2 input  -->
+            <div class="form-group">
+                <label class="col-xs-1 control-label">Player 2:</label>
+                <div class="col-xs-2">
+                    <ui-select ng-model="event.players[1]" 
+                               search-enabled="true" 
+                               reset-search-input="true" 
+                               theme="bootstrap">
+                        <ui-select-match placeholder="Select Player 2">
+                            {{ $select.selected.lastName }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="player._id as player in players | 
+                                                   orderBy: 'lastName' track by player._id">
+                            <div ng-bind-html="player.lastName"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <!--             Form label and input field for Player 3 input  -->
+            <div class="form-group">
+                <label class="col-xs-1 control-label">Player 3:</label>
+                <div class="col-xs-2">
+                    <ui-select ng-model="event.players[2]" 
+                               search-enabled="true" 
+                               reset-search-input="true" 
+                               theme="bootstrap">
+                        <ui-select-match placeholder="Select Player 3">
+                            {{ $select.selected.lastName }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="player._id as player in players | 
+                                                   orderBy: 'lastName' track by player._id">
+                            <div ng-bind-html="player.lastName"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <br/>
+            </div>
+            <!--             Form label and input field for Player 4 input  -->
+            <div class="form-group">
+                <label class="col-xs-1 control-label">Player 4:</label>
+                <div class="col-xs-2">
+                    <ui-select ng-model="event.players[3]" 
+                               search-enabled="true" 
+                               reset-search-input="true" 
+                               theme="bootstrap">
+                        <ui-select-match placeholder="Select Player 4">
+                            {{ $select.selected.lastName }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="player._id as player in players | 
+                                                   orderBy: 'lastName' track by player._id">
+                            <div ng-bind-html="player.lastName"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <br/>
+            </div>
+            <!--             Form label and textarea field for Notes input -->
+            <div class="form-group">
+                <label class="col-xs-1 control-label">Fees:</label>
+                <div class="col-xs-2">
+                    <input type="number" min="0.01" step="0.01" max="999" class="form-control col-xs-2" ng-model="event.fees" />
+                </div>
+            </div>
+
+
+            <!--             Form label and textarea field for Notes input -->
+            <div class="form-group">
+                <label for="notes" class="col-xs-1 control-label">Notes</label>
+                <div class="col-xs-3">
+<!--                    <input type="text" class="form-control" ng-model="event.notes">                         -->
+                    <textarea type="text" class="form-control" rows="3" ng-model="event.notes"></textarea>
+                </div>
+                <br/>
+            </div>
+             <br/><br/>
+            <div>
+                <button type="submit" class="btn btn-default">Add</button>
+            </div>
+        </form>
+    </div>
+</div>

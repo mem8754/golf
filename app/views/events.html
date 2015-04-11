@@ -1,11 +1,17 @@
-<div>
-    <h4><strong>Schedule of Tee Times</strong></h4>
-</div>
 <div class="container">
+    <h2><strong>Schedule of Events</strong></h2>
+</div>
+<br/>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <a class="btn btn-primary btn-sm" style="text-align: center" href="#/addTeeTime" role="button">Add Tee Time</a>
+        </div>
+    </div>
     <div class="row col-xs-12">
         <h4>
             <strong>
-                Scheduled Tee Times:
+                Scheduled Tee Times ({{ scheduledTeeTimes.length }}):
             </strong>
         </h4>
         <br />
@@ -23,7 +29,7 @@
                     <th>Notes</th>
                 </tr>
                 <tr ng-repeat="teeTime in scheduledTeeTimes | orderBy:'dateTime':true">
-                    <td><a href="#/editTeeTime/{{ teeTime._id }}">{{ teeTime.dateTime }}</td>
+                    <td><a href="#/editTeeTime/{{ teeTime._id }}">{{ teeTime.dateTime | date: 'yyyy.MM.dd @ h:mm a' }}</td>
                     <td><a href="#/viewCourse/{{ teeTime.courseId }}">{{ teeTime.courseTag }}</td>
                     <td>{{ teeTime.playerName[0] }}</td>
                     <td>{{ teeTime.playerName[1] }}</td>
@@ -38,7 +44,7 @@
     <div class="row col-xs-12">
         <h4>
             <strong>
-                Past Tee Times:
+                Past Tee Times ({{ pastTeeTimes.length }}):
             </strong>
         </h4>
         <br />
@@ -56,7 +62,7 @@
                     <th>Notes</th>
                 </tr>
                 <tr ng-repeat="teeTime in pastTeeTimes | orderBy:'dateTime'">
-                    <td><a href="#/editTeeTime/{{ teeTime._id }}">{{ teeTime.dateTime }}</td>
+                    <td><a href="#/editTeeTime/{{ teeTime._id }}">{{ teeTime.dateTime | date: 'yyyy.MM.dd @ h:mm a' }}</td>
                     <td><a href="#/viewCourse/{{ teeTime.courseId }}">{{ teeTime.courseTag }}</td>
                     <td>{{ teeTime.playerName[0] }}</td>
                     <td>{{ teeTime.playerName[1] }}</td>
@@ -65,8 +71,6 @@
                     <td>{{ teeTime.notes }}</td>
                 </tr>
             </table>
-            <br />
-            <span>Total Past Tee Times: {{ pastTeeTimes.length }}</span>
         </div>
     </div>
 </div>

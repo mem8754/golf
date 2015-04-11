@@ -47,8 +47,13 @@
                 controller: 'EditRoundController',
                 templateUrl: 'app/views/editRound.html'
             })
-            .when('/schedule', {
-                templateUrl: 'app/views/schedule.html'
+            .when('/events', {
+                controller: 'EventsController',
+                templateUrl: 'app/views/events.html'
+            })
+            .when('/addTeeTime', {
+                controller: 'AddTeeTimeController',
+                templateUrl: 'app/views/addTeeTime.html'
             })
             .otherwise({ redirectTo: '/' });
     });

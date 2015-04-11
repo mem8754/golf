@@ -5,9 +5,6 @@ var express = require('express'),
     methodOverride = require('method-override'),
     app = express();
 
-// var mongoLabConnectionString =  'mongodb://mem:1234@ds031531.mongolab.com:31531/golfdb';
-// var localhostConnectionString = "mongodb://mem:1234@localhost:27017/golfdb";
- 
 var credentials = require('./credentials.js');          /* database access credentials for MongoDB      */
 var Courses = require('./app/models/courses.js');       /* schema for GETting  and PUTting course data  */
 var NewCourse = require('./app/models/newCourse.js');   /* schema for POSTing a new course              */
@@ -15,7 +12,8 @@ var Players = require('./app/models/players.js');       /* schema for GETting pl
 var Rounds = require('./app/models/rounds.js');         /* schema for GETting and PUTting round data    */
 var Tees = require('./app/models/tees.js');             /* schema for GETting tee information           */
 var NewTee = require('./app/models/newTee.js');         /* schema for POSTing a new tee box             */
-var Events = require('.app/models/events.js');          /* schema for GETting event data                */
+var Events = require('./app/models/events.js');         /* schema for GETting event data                */
+var NewEvent = require('./app/models/newEvent.js');      /* schema for POSTing new event data            */
 
 app.set('port', process.env.PORT || 3000);
 
@@ -23,8 +21,8 @@ app.set('port', process.env.PORT || 3000);
 //  Connect to the database
 //      Comment out either the localhost or the MongoLab connection string below:
 //===================================================================================
-mongoose.connect(credentials.mongo.dbURI.local, credentials.mongo.dbOptions.local);              /* local mongodb   */
-// mongoose.connect(credentials.mongo.dbURI.remote, credentials.mongo.dbOptions.remote);            /* mongoLab        */
+//mongoose.connect(credentials.mongo.dbURI.local, credentials.mongo.dbOptions.local);              /* local mongodb   */
+mongoose.connect(credentials.mongo.dbURI.remote, credentials.mongo.dbOptions.remote);            /* mongoLab        */
 
 //===================================================================================
 //  Middleware:
@@ -58,28 +56,62 @@ app.use(express.static(__dirname + '/'));
 //  Event-related routes:
 //      /events/teeTimes/before - retrieves tee time events prior to a specific date/time
 //      /events/teeTimes/after - retrieves tee time events subsequent to a specific date/time
+//      /events/add - adds an event to the database (uses NewEvent Schema)
 //==============================================================================================
 
 //==============================================================================================
-// "/events/teeTimes/before" route handler  
+// "/events/teeTimes/before/:ref" route handler  
 //==============================================================================================
-app.get('/events/teeTimes/before', function (req, res) {
+app.get('/events/teeTimes/before/:ref', function (req, res) {
     'use strict';
     console.log('Route handler for /events/teeTimes/before');
-    Events.find({eventType: "Tee Time", dateTime: "$lt: date"}, function (err, teeTimes) {
-        res.json(teeTimes);
+    Events.find({eventType: "Tee Time", dateTime: { '$lt' : req.params.ref }}, function (err, events) {
+        res.json(events);
     });
 });
 
 //==============================================================================================
-// "/events/teeTimes/after" route handler  
+// "/events/teeTimes/after/:ref" route handler  
 //==============================================================================================
-app.get('/events/teeTimes/after', function (req, res) {
+app.get('/events/teeTimes/after/:ref', function (req, res) {
     'use strict';
-    console.log('Route handler for /events/teeTimes/after');
-    Events.find({eventType: "Tee Time", dateTime: "$gt: date"}, function (err, teeTimes) {
-        res.json(teeTimes);
+//    var timeNow = req.body.refTime;
+    console.log('Route handler for /events/teeTimes/after: ', req.params);
+    Events.find({eventType: "Tee Time", dateTime: { '$gt': req.params.ref } }, function (err, events) {
+        res.json(events);
     });
+});
+
+//==============================================================================================
+// "/events/add" route handler  
+//==============================================================================================
+app.post('/events/add', function (req, res) {
+    'use strict';
+    var event = req.body;
+    console.log('Route handler for /events/add');
+    console.log('Event: ', req.body);
+    
+    NewEvent.create(event, function (err, data) {
+        if (err) {
+            console.log("Mongoose error creating new event for " + req.body.eventType);
+            console.log("Error: ", err);
+            res.status(400);
+            res.json({error: err});
+        } else {
+            console.log("Successfully added Event object: ", event);
+            res.status(201);
+            res.json(data);
+        }
+    });
+});
+
+app.get('/events/findDup', function(req, res) {
+    'use strict';
+    console.log('Route handler for /events/findDup');
+    Events.find({ eventType: req.body.type, dateTime: req.body.date, courseId: req.body.crs }, function (err, events) {
+        res.json(events);
+    });
+
 });
 
 //==============================================================================================
@@ -246,7 +278,7 @@ app.get('/courses', function (req, res) {
 // "/courses/names" route handler
 //==============================================================================================
 
-app.get('/courses', function (req, res) {
+app.get('/courses/names', function (req, res) {
     'use strict';
     console.log('Route handler for /courses/names');
     Courses.find({}, { _id: 1, tag: 1 }, function (err, tags) {

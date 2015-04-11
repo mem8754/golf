@@ -1,7 +1,8 @@
 (function () {
     'use strict';
-    var TeeTimesController = function ($scope, $window, $log, eventsFactory, coursesFactory, playersFactory) {
+    var EventsController = function ($scope, $window, $log, eventsFactory, coursesFactory, playersFactory) {
         var rightNow = null;
+        var refTime = "";
 
         $scope.scheduledTeeTimes = null;
         $scope.pastTeeTimes = null;
@@ -10,11 +11,12 @@
         
         function init() {
             
-// ----->   rightNow = now();
+            rightNow = new Date();
+            refTime = rightNow.toISOString();
 
 // Begin by getting the future Tee Times from the database.
             
-            eventsFactory.getScheduledTeeTimes(rightNow)
+            eventsFactory.getScheduledTeeTimes(refTime)
                 .error(function (data, status, headers, config) {
                     $log.error('Error getting scheduled Tee Times: ', status);
                 })
@@ -23,7 +25,7 @@
                 
 // If successful, read the past Tee Times from the database.
                 
-                    eventsFactory.getPastTeeTimes(rightNow)
+                    eventsFactory.getPastTeeTimes(refTime)
                         .error(function (data, status, headers, config) {
                             $log.error('Error getting past Tee Times: ', status);
                         })
@@ -53,7 +55,7 @@
                                         
                                             for (i in $scope.scheduledTeeTimes) {
                                                 for (j in $scope.courseNames) {
-                                                    if ($scope.scheduledTeeTimes[i].couseId == $scope.courseNames[j]._id) {
+                                                    if ($scope.scheduledTeeTimes[i].courseId == $scope.courseNames[j]._id) {
                                                         $scope.scheduledTeeTimes[i].courseTag = $scope.courseNames[j].tag;
                                                         break;
                                                     }
@@ -62,14 +64,15 @@
 // Iterate through the future Tee Times to insert up to four player names into the Tee Time object, using the player ID.
 // (make sure the player ID is not null)
                                                 
+                                                $scope.scheduledTeeTimes[i].playerName = [];
                                                 for (j = 0; j < 4; j++) {
                                                     $scope.scheduledTeeTimes[i].playerName[j] = "- Open -";
                                                     for (k in $scope.playerNames) {
-                                                        if (null !== $scope.scheduledTeeTimes[i].playerId[j] &&
-                                                                $scope.scheduledTeeTimes[i].playerId[j] == $scope.playerNames[k]._id) {
-                                                            $scope.scheduledTeeTimes[i].playerName[j] = $scope.playerName[k].firstName +
-                                                                                                        " " +
-                                                                                                        $scope.playerName[k].lastName;
+                                                        if (null !== $scope.scheduledTeeTimes[i].players[j] &&
+                                                                $scope.scheduledTeeTimes[i].players[j] == $scope.playerNames[k]._id) {
+                                                            $scope.scheduledTeeTimes[i].playerName[j] = $scope.playerNames[k].lastName +
+                                                                                                        ", " +
+                                                                                                        $scope.playerNames[k].firstName;
                                                             break;
                                                         }
                                                     }
@@ -81,7 +84,7 @@
                                         
                                             for (i in $scope.pastTeeTimes) {
                                                 for (j in $scope.courseNames) {
-                                                    if ($scope.pastTeeTimes[i].couseId == $scope.courseNames[j]._id) {
+                                                    if ($scope.pastTeeTimes[i].courseId == $scope.courseNames[j]._id) {
                                                         $scope.pastTeeTimes[i].courseTag = $scope.courseNames[j].tag;
                                                         break;
                                                     }
@@ -89,13 +92,15 @@
                                                 
 // iterate through the past Tee Times to insert player names, as was done above for the future Tee Times.
                                                 
+                                                $scope.pastTeeTimes[i].playerName = [];
                                                 for (j = 0; j < 4; j++) {
                                                     $scope.pastTeeTimes[i].playerName[j] = "- Open -";
                                                     for (k in $scope.playerNames) {
-                                                        if (null !== $scope.pastTeeTimes[i].playerId[j] &&
-                                                                $scope.pastTeeTimes[i].playerId[j] == $scope.playerNames[k]._id) {
-                                                            $scope.pastTeeTimes[i].playerName[j] = $scope.playerName[k].firstName + " " +
-                                                                $scope.playerName[k].lastName;
+                                                        if (null !== $scope.pastTeeTimes[i].players[j] &&
+                                                                $scope.pastTeeTimes[i].players[j] == $scope.playerNames[k]._id) {
+                                                            $scope.pastTeeTimes[i].playerName[j] = $scope.playerNames[k].lastName + 
+                                                                                                    ", " +
+                                                                                                    $scope.playerNames[k].firstName;
                                                             break;
                                                         }
                                                     }
@@ -112,9 +117,9 @@
         
     };
     
-    TeeTimesController.$inject = ['$scope', '$window', '$log', 'eventsFactory', 'coursesFactory', 'playersFactory'];
+    EventsController.$inject = ['$scope', '$window', '$log', 'eventsFactory', 'coursesFactory', 'playersFactory'];
 
     angular.module('golfApp')
-        .controller('TeeTimesController', TeeTimesController);
+        .controller('EventsController', EventsController);
     
 }());

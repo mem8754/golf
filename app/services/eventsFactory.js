@@ -4,12 +4,24 @@
         
         var factory = {};
         
-        factory.getScheduledTeeTimes = function (dateTime) {
-            return $http.get('/events/teeTimes/after', dateTime);
+        factory.getScheduledTeeTimes = function (refTime) {
+            return $http.get('/events/teeTimes/after/' + refTime);
         };
         
-        factory.getPastTeeTimes = function (dateTime) {
-            return $http.get('/events/teeTimes/before', dateTime);
+        factory.getPastTeeTimes = function (refTime) {
+            return $http.get('/events/teeTimes/before/' + refTime);
+        };
+        
+        factory.addEvent = function(event) {
+            return $http.post('/events/add', event);
+        };
+        
+        factory.getDuplicateEvent = function(date, type, courseId) {
+            var event = {};
+            event.date = date;
+            event.type = type;
+            event.crs = courseId;
+            return $http.get('/events/findDup', event);
         };
         
         return factory;
