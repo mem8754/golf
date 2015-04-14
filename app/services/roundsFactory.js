@@ -1,3 +1,6 @@
+/*jslint nomen: true, plusplus: true*/
+/*global console, require, process, __dirname, angular*/
+
 (function () {
     'use strict';
     var roundsFactory = function ($http) {
@@ -5,55 +8,8 @@
         var factory = {},
             rounds = null;
             
-        factory.getRounds = function () {
-            return $http.get('/rounds');
-        };
-        
-        factory.getPlayerRounds = function (playerId) {
-            return $http.get('/rounds/player/' + playerId);
-        };
-        
-        factory.getCourseRounds = function (courseId) {
-            return $http.get('/rounds/course/' + courseId);
-        };
-        
-        factory.getDateRounds = function (roundDate) {
-            return $http.get('/rounds/date/' + roundDate);
-        };
-        
-        factory.getRound = function (roundId) {
-            return $http.get('/round/' + roundId);
-        };
-        
-        factory.updateRound = function (round, hdcp) {
-            var scores = {};
-            console.log('roundsFactory updateRound: ', round);
-            console.log('Hdcp Data: ', hdcp);
-            
-            round.crsHdcp = Math.round(round.hdcpIndex * hdcp.slopeRating / 113.0);
-            
-            scores = calcHdcpDiff(round.grossScore, round.crsHdcp, hdcp.par);
-            
-            round.grossScore = scores.grossScore;
-            round.adjGrossScore = scores.adjGrossScore;
-            
-            round.hdcpDiff = (round.adjGrossScore[20] - hdcp.courseRating) * 113.0 / hdcp.slopeRating;
-            round.hdcpDiff = Math.round(round.hdcpDiff * 10) / 10;
-            
-            round.netScore = scores.grossScore[20] - round.crsHdcp;
-            
-            console.log('Updated Round: ', round);
-            
-            return $http.put('/updateRound/' + round._id, round);
-        };
-        
-        factory.addRound = function (round) {
-            console.log('roundsFactory addRound: ', round);
-            return $http.post('/addRound', round);
-        };
-        
 //========================================================================================================
-//  calcScores Function
+//  calcHdcpDiff Function
 //      This function will calculate round scores based on a player's handicap index, slope rating, and
 //          hole par scores.
 //      It requires an array of Gross scores (21 values), a handicap index, and an array of "par" values 
@@ -129,6 +85,57 @@
 
             return (scores);
         }
+        
+        factory.getRounds = function () {
+            return $http.get('/rounds');
+        };
+        
+        factory.getPlayerRounds = function (playerId) {
+            return $http.get('/rounds/player/' + playerId);
+        };
+        
+        factory.getCourseRounds = function (courseId) {
+            return $http.get('/rounds/course/' + courseId);
+        };
+        
+        factory.getDateRounds = function (roundDate) {
+            return $http.get('/rounds/date/' + roundDate);
+        };
+        
+        factory.getRound = function (roundId) {
+            return $http.get('/round/' + roundId);
+        };
+ 
+        factory.removeRound = function (roundId) {
+            return $http.delete('/round/removeRound/' + roundId);
+        };
+        
+        factory.updateRound = function (round, hdcp) {
+            var scores = {};
+            console.log('roundsFactory updateRound: ', round);
+            console.log('Hdcp Data: ', hdcp);
+            
+            round.crsHdcp = Math.round(round.hdcpIndex * hdcp.slopeRating / 113.0);
+            
+            scores = calcHdcpDiff(round.grossScore, round.crsHdcp, hdcp.par);
+            
+            round.grossScore = scores.grossScore;
+            round.adjGrossScore = scores.adjGrossScore;
+            
+            round.hdcpDiff = (round.adjGrossScore[20] - hdcp.courseRating) * 113.0 / hdcp.slopeRating;
+            round.hdcpDiff = Math.round(round.hdcpDiff * 10) / 10;
+            
+            round.netScore = scores.grossScore[20] - round.crsHdcp;
+            
+            console.log('Updated Round: ', round);
+            
+            return $http.put('/updateRound/' + round._id, round);
+        };
+        
+        factory.addRound = function (round) {
+            console.log('roundsFactory addRound: ', round);
+            return $http.post('/addRound', round);
+        };
         
         return factory;
 

@@ -5,29 +5,36 @@
                 Edit {{ name }} Tee Box for {{ course.tag }}
             </strong>
         </h4>
-        <br />
         <form class="form-horizontal" ng-submit="updateTeeBox()">
             <div class="form-group">
-                <label class="col-xs-2 control-label">Tee Name</label>
-                <div class="col-xs-3">
-                    <input type="text" class="form-control" ng-model="tee.teeName">
+                <div class="row">
+                    <label class="col-xs-1 control-label">Tee Name</label>
+                    <div class="col-xs-3">
+                        <input type="text" class="form-control" ng-model="tee.teeName">
+                    </div>
+                     <div class="col-xs-4">
+                        <button type="submit" class="btn btn-primary">Update Tee</button>
+                    </div>
                 </div>
-                <br/>
+           </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-xs-1 control-label">Rating</label>
+                    <div class="col-xs-2">
+                        <input type="number step=0.1" class="form-control" ng-model="tee.rating">
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label class="col-xs-2 control-label">Rating</label>
-                <div class="col-xs-2">
-                    <input type="number step=0.1" class="form-control" ng-model="tee.rating">
+                <div class="row">
+                    <label class="col-xs-1 control-label">Slope</label>
+                    <div class="col-xs-2">
+                        <input type="number" class="form-control" ng-model="tee.slope">
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-xs-2 control-label">Slope</label>
-                <div class="col-xs-2">
-                    <input type="number" class="form-control" ng-model="tee.slope">
-                </div>
-            </div>
-            <br/><br/>
-            <div class="form-group col-md-12">
+            <div class="row">
+                <div class="form-group col-md-12">
                     <div class="row">
                         <label class="col-xs-1">Hole</label>
                         <label class="col-xs-1" align="center"><b>1</b></label>
@@ -41,11 +48,11 @@
                         <label class="col-xs-1" align="center"><b>9</b></label>
                     </div>
                     <h5><b>Yardage:</b></h5>
-                    <div class="form-group col-md-12">
-                        <label class="col-xs-1 control-label">Front</label>
-                        <div class="row">
-                            <small>
-                                <div class="col-xs-1 input-small">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="inputGross1" class="col-xs-1 control-label">Front</label>
+                            <div class="row">
+                                <div class="col-xs-1">
                                     <input type="number" class="form-control" ng-model="tee.yds[0]">
                                 </div>
                                 <div class="col-xs-1">
@@ -72,13 +79,13 @@
                                 <div class="col-xs-1">
                                     <input type="number" class="form-control" ng-model="tee.yds[8]">
                                 </div>
-                            </small>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-xs-1 control-label">Back</label>
-                        <div class="row">
-                            <small>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="inputGross10" class="col-xs-1 control-label">Back</label>
+                            <div class="row">
                                 <div class="col-xs-1">
                                     <input type="number" class="form-control" ng-model="tee.yds[9]">
                                 </div>
@@ -106,15 +113,10 @@
                                 <div class="col-xs-1">
                                     <input type="number" class="form-control" ng-model="tee.yds[17]">
                                 </div>
-                            </small>
-                        </div>
-                        <br/><br/>
-                        <div class="col-md-5"></div>
-                        <div class="col-md-4">
-                            <button type="submit" class="btn btn-primary">Update Tee</button>
+                            </div>
                         </div>
                     </div>
-                </small>
+                </div>
             </div>
         </form>
     </div>

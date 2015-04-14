@@ -5,31 +5,6 @@
         var factory = {},
             players = null;
             
-        factory.getPlayers = function () {
-            return $http.get('/players');
-        };
-        
-        factory.getPlayerNames = function () {
-            return $http.get('players/names');
-        };
-        
-        factory.getPlayer = function (playerId) {
-            return $http.get('/players/' + playerId);
-        };
-        
-        factory.getPlayerHcp = function (playerId) {
-            return $http.get('/player/hcp/' + playerId);
-        };
-        
-        factory.calcPlayerHdcp = function (rounds) {
-            return calcHandicapIndex(rounds);
-        };
-        
-        factory.updatePlayerHdcp = function (player, hcp) {
-            return $http.put('/player/hcp/' + player._id, { hdcp: hcp });
-        };
-
-            
 //==========================================================================================
 //  calcHandicapIndex Function
 //
@@ -66,6 +41,9 @@
             if (i <= 4) {                                       /* not enough rounds posted to calc idx */
                 hcpIndex = 36.4;                                /* not enough rounds, set to max    */
             } else {
+                if (i > 20) {
+                    i = 20;
+                }
                 hcpDiffs.sort(function (a, b) {                 /*  sort by hcp diff descending         */
                     return a - b;
                 });
@@ -94,6 +72,31 @@
             hcpIndex = Math.min(hcpIndex, 36.4);    /*  Can't be over 36.4                  */
             return (hcpIndex);
         }
+            
+        factory.getPlayers = function () {
+            return $http.get('/players');
+        };
+        
+        factory.getPlayerNames = function () {
+            return $http.get('players/names');
+        };
+        
+        factory.getPlayer = function (playerId) {
+            return $http.get('/players/' + playerId);
+        };
+        
+        factory.getPlayerHcp = function (playerId) {
+            return $http.get('/player/hcp/' + playerId);
+        };
+        
+        factory.calcPlayerHdcp = function (rounds) {
+            return calcHandicapIndex(rounds);
+        };
+        
+        factory.updatePlayerHdcp = function (player, hcp) {
+            return $http.put('/player/hcp/' + player._id, { hdcp: hcp });
+        };
+
            
         return factory;
     };

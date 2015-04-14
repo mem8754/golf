@@ -7,6 +7,7 @@ var newEventSchema = new Schema(
         dateTime: Date,
         courseId: Schema.Types.ObjectId,
         players: [ Schema.Types.ObjectId ],
+        fees: Number,
         notes: String
     },
     {

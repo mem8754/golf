@@ -5,51 +5,69 @@
                 Add a Round for {{ playerName }}
             </strong>
         </h4>
-        <br />
-        <form class="form-horizontal" ng-submit="addRound()">
-            <div class="form-group">
-                <label for="date" class="col-xs-1 control-label">Round Date</label>
-                <div class="col-xs-3">
-                    <input type="datetime-local" name="roundDate" class="form-control col-xs-2" ng-model="round.date">
+         <form class="form-horizontal" ng-submit="addRound()">
+            <div class="row">
+                <div class="form-group">
+                    <label for="date" class="col-xs-1 control-label">Date:</label>
+                    <div class="col-xs-3">
+                        <input type="datetime-local" name="roundDate" class="form-control col-xs-2" ng-model="round.date">
+                    </div>
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-2">
+                        <button type="submit" class="btn btn-primary">Post this Round</button>
+                    </div>
                 </div>
             </div>
             <!--             Form label and input field for Course input  -->
-            <div class="form-group">
-                <label for="crs" class="col-xs-1 control-label">Course</label>
-                <div class="col-xs-3">
-                    <ui-select ng-model="round.courseId" 
-                               search-enabled="true" 
-                               reset-search-input="true" 
-                               theme="bootstrap">
-                        <ui-select-match placeholder="Select a course" 
-                                         allow-clear="true">
-                            {{ $select.selected.tag }}
-                        </ui-select-match>
-                        <ui-select-choices group-by="'state'" 
-                                           repeat="course._id as course in courses | 
-                                                   filter: $select.search | 
-                                                   orderBy: 'city' track by course._id">
-                            <div ng-bind-html="course.tag | highlight: $select.search"></div>
-                        </ui-select-choices>
-                    </ui-select>
-<!--                    <input type="text" name="course" class="form-control" ng-model="round.courseTag">       -->
+            <div class="row">
+                <div class="form-group">
+                    <label for="crs" class="col-xs-1 control-label">Course:</label>
+                    <div class="col-xs-3">
+                        <ui-select ng-model="round.courseId" 
+                                   search-enabled="true" 
+                                   reset-search-input="true" 
+                                   theme="bootstrap"
+                                   ng-change="updateTeeBoxes()">
+                            <ui-select-match placeholder="Select a course" 
+                                             allow-clear="true">
+                                {{ $select.selected.tag }}
+                            </ui-select-match>
+                            <ui-select-choices group-by="'state'" 
+                                               repeat="course._id as course in courses | 
+                                                       filter: $select.search | 
+                                                       orderBy: 'tag' track by course._id">
+                                <div ng-bind-html="course.tag | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
                 </div>
-                <br/>
-                <span>{{ rmsg1 }}</span>
             </div>
-            <!--             Form label and input field for Tee Box input -->
-            <div class="form-group">
-                <label for="inputTee" class="col-xs-1 control-label">Tee</label>
-                <div class="col-xs-2">
-                    <input type="text" class="form-control" ng-model="teeName">
+<!--
+Form label and input field for Tee Box input:
+    - build a ui-select structure to display the available tee boxes ($scope.tees)
+    - bind the control to $scope.rounds.teeId
+    - bind the input field display to $scope.tee.teeName
+-->
+            <div class="row">
+                <div class="form-group">
+                    <label for="inputTee" class="col-xs-1 control-label">Tee:</label>
+                    <div class="col-xs-2">
+                        <ui-select ng-model="round.teeId" 
+                                   search-enabled="true" 
+                                   reset-search-input="true" 
+                                   theme="bootstrap">
+                            <ui-select-match placeholder="Select tee box" 
+                                             allow-clear="true">
+                                {{ $select.selected.teeName }}
+                            </ui-select-match>
+                            <ui-select-choices repeat="tee._id as tee in tees | 
+                                                       filter: $select.search |
+                                                       orderBy: 'teeName' track by tee._id">
+                                <div ng-bind-html="tee.teeName | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
                 </div>
-                <br/>
-                <span>{{ rmsg2 }}</span>
-            </div>
-            <span>{{ rmsg3 }}</span>
-            <br/><br/>
-            <div>
-                <button type="submit" class="btn btn-default">Add</button>
             </div>
         </form>
     </div>

@@ -1,3 +1,6 @@
+/*jslint nomen: true, node: true */
+/*global angular */
+
 (function () {
     'use strict';
     var AddCourseController = function ($scope, coursesFactory) {

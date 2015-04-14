@@ -1,25 +1,21 @@
 <div class="container">
     <div class="col-xs-12">
-        <form class="form-horizontal" ng-submit="addTeeTime()">
-            <div class="row">
-                <div class="col-xs-4">
-                    <h4>
-                        <strong>
-                            Add a {{ event.eventType }} Event
-                        </strong>
-                    </h4>
-                </div>
-            </div>
-            <br />
+        <h4>
+            <strong>
+                Update {{ event.eventType }} Event
+            </strong>
+        </h4>
+        <br />
+        <form class="form-horizontal" ng-submit="updateTeeTime()">
             <div class="row">
                 <div class="form-group">
-                    <label for="date" class="col-xs-1 control-label">Date/Time:</label>
+                    <label class="col-xs-1 control-label">Date/Time:</label>
                     <div class="col-xs-3">
-                        <input type="datetime-local" class="form-control col-xs-2" ng-model="event.dateTime">
+                        <input type="datetime-local" class="form-control" ng-model="dt"> 
                     </div>
                     <div class="col-xs-1"></div>
                     <div>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </div>
             </div>
@@ -44,7 +40,8 @@
                             </ui-select-choices>
                         </ui-select>
                     </div>
-                 </div>
+                    <br/>
+                </div>
             </div>
             <!--             Form label and textarea field for Fees input -->
             <div class="row">
@@ -55,8 +52,8 @@
                     </div>
                 </div>
             </div>
+            <!--             Form label and input field for Player 1 input  -->
             <div class="row">
-                <!--             Form label and input field for Player 1 input  -->
                 <div class="form-group">
                     <label class="col-xs-1 control-label">Player 1:</label>
                     <div class="col-xs-2">
@@ -125,7 +122,6 @@
                             </ui-select-choices>
                         </ui-select>
                     </div>
-                    <br/>
                 </div>
             </div>
             <!--             Form label and textarea field for Notes input -->

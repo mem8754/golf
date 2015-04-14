@@ -1,3 +1,5 @@
+/*global angular */
+
 (function () {
     'use strict';
     var coursesFactory = function ($http, $log) {
@@ -17,8 +19,12 @@
             return $http.get('/courses/' + courseId);
         };
         
-        factory.getTees = function (courseId) {
+        factory.getCourseTees = function (courseId) {
             return $http.get('/teesByCourse/' + courseId);
+        };
+        
+        factory.getDefaultTee = function () {
+            return $http.get('/defaultTee');
         };
 
         factory.getCourseId = function (courseTag) {
@@ -50,6 +56,10 @@
         factory.updateCourse = function (course) {
             $log.log('coursesFactory updateCourse: ', course);
             return $http.put('/courses/updateCourse', course);
+        };
+        
+        factory.removeTeeBox = function (teeId) {
+            return $http.delete('/tees/removeTee/' + teeId);
         };
         
         

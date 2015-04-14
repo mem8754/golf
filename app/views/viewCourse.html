@@ -57,6 +57,7 @@
                     <th>Back</th>
                     <th>&nbsp;</th>
                     <th>Total</th>
+                    <th>Del</th>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
@@ -87,6 +88,7 @@
                     <th>&nbsp;</th>
                     <td>&nbsp;</td>
                     <th>&nbsp;</th>
+                    <td>&nbsp;</td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
@@ -119,6 +121,7 @@
                     <td>{{ course.par[19] }}</td>
                     <th>&nbsp;</th>
                     <td>{{ course.par[20] }}</td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr ng-repeat="tee in tees">
                      <td style="text-align:left"><a href="#/editTeeBox/{{ tee._id }}">{{ tee.teeName }}</td>
@@ -150,6 +153,14 @@
                     <td>{{ tee.yds[19] | number:0 }}</td>
                     <th>&nbsp;</th>
                     <td>{{ tee.yds[20] | number:0 }}</td>
+                    <td>
+                        <font color="ff0000">
+                            <span class="glyphicon glyphicon-remove" 
+                                  aria-hidden="true" 
+                                  ng-click="removeTeeBox(tee._id)">
+                            </span>
+                        </font>
+                    </td>
                 </tr>
             </table>
         </small>

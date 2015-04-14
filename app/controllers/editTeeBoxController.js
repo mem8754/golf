@@ -1,3 +1,6 @@
+/*jslint nomen: true, node: true */
+/*global angular */
+
 (function () {
     'use strict';
     var EditTeeBoxController = function ($scope, $window, $log, $routeParams, coursesFactory) {
@@ -48,22 +51,22 @@
                 })
                 .success(function (tees) {
                     if (tees !== null) {                                        /*  Step 2 */
-                        for (i = 0; i < tees.length; i++) {
+                        for (i = 0; i < tees.length; i += 1) {
                             if (tees[i].teeName === $scope.tee.teeName && tees[i]._id !== $scope.tee._id) {
                                 $window.alert("A separate tee box with that name already exists.\nPlease provide a different name");
                                 return;
                             }
                         }
-                    };
+                    }
 
 // if we make it here, the tee box name does not exist in the DB for this course for any other defined tee, and can be updated.
 
                     $scope.tee.yds[18] = 0;
                     $scope.tee.yds[19] = 0;
                     $scope.tee.yds[20] = 0;                                     /*  Step 3 */
-                    for (i = 0; i < 9; i++) {
+                    for (i = 0; i < 9; i += 1) {
                         $scope.tee.yds[18] += $scope.tee.yds[i];
-                        $scope.tee.yds[19] += $scope.tee.yds[i+9];
+                        $scope.tee.yds[19] += $scope.tee.yds[i + 9];
                     }
                     $scope.tee.yds[20] = $scope.tee.yds[18] + $scope.tee.yds[19];
 

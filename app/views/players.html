@@ -11,7 +11,7 @@
                 <th>Phone</th>
             </tr>
             <tr ng-repeat="player in players | orderBy:pSortBy:pReverse">
-                <td><a href="#/rounds/{{ player._id }}">{{ player.lastName}}, {{ player.firstName }}</a></td>
+                <td><a href="#/playerDetails/{{ player._id }}">{{ player.lastName}}, {{ player.firstName }}</a></td>
                 <td>{{ player.email }}</td>
                 <td>{{ player.phone }}</td>
             </tr>

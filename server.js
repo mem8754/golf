@@ -1,3 +1,6 @@
+/*global angular */
+/*jslint node: true, nomen: true*/
+
 var express = require('express'),
     mongoose = require('mongoose'),
     bodyParser = require('body-parser'),
@@ -46,7 +49,7 @@ app.use(cookieParser(credentials.cookieSecret));
 
 // set the static files location /public/img will be /img for users
 
-app.use(express.static(__dirname + '/'));
+app.use(express['static'](__dirname + '/'));
 //
 //==============================================================================================
 //  Route Handlers
@@ -54,30 +57,52 @@ app.use(express.static(__dirname + '/'));
 
 //==============================================================================================
 //  Event-related routes:
-//      /events/teeTimes/before - retrieves tee time events prior to a specific date/time
-//      /events/teeTimes/after - retrieves tee time events subsequent to a specific date/time
+//      /events/getFutureEvents - retrieves future events for specified playerId
+//      /events/teeTimes/past - GETs tee time events prior to a specified date/time
+//      /events/teeTimes/future - retrieves tee time events subsequent to a specific date/time
 //      /events/add - adds an event to the database (uses NewEvent Schema)
+//      /events/update - PUT an event in the database
+//      /events/removeEvent/:eventId - remove an event from the database
 //==============================================================================================
 
 //==============================================================================================
-// "/events/teeTimes/before/:ref" route handler  
+// "/events/getFutureEvents/:playerId" route handler  
 //==============================================================================================
-app.get('/events/teeTimes/before/:ref', function (req, res) {
+
+app.get('/events/getFutureEvents', function (req, res) {
     'use strict';
-    console.log('Route handler for /events/teeTimes/before');
-    Events.find({eventType: "Tee Time", dateTime: { '$lt' : req.params.ref }}, function (err, events) {
+    console.log('Route handler for /events/getFutureEvents/:playerId');
+    var currTime = new Date(),
+        refTime = currTime.toISOString();
+    Events.find({ dateTime: { '$gt' : refTime } }, function (err, events) {
         res.json(events);
     });
 });
 
 //==============================================================================================
-// "/events/teeTimes/after/:ref" route handler  
+// "/events/teeTimes/past" route handler  
 //==============================================================================================
-app.get('/events/teeTimes/after/:ref', function (req, res) {
+
+app.get('/events/teeTimes/past', function (req, res) {
     'use strict';
-//    var timeNow = req.body.refTime;
-    console.log('Route handler for /events/teeTimes/after: ', req.params);
-    Events.find({eventType: "Tee Time", dateTime: { '$gt': req.params.ref } }, function (err, events) {
+    console.log('Route handler for /events/teeTimes/past');
+    var currTime = new Date(),
+        refTime = currTime.toISOString();
+    Events.find({eventType: "Tee Time", dateTime: { '$lt' : refTime }}, function (err, events) {
+        res.json(events);
+    });
+});
+
+//==============================================================================================
+// "/events/teeTimes/future" route handler  
+//==============================================================================================
+
+app.get('/events/teeTimes/future', function (req, res) {
+    'use strict';
+    console.log('Route handler for /events/teeTimes/future.');
+    var currTime = new Date(),
+        refTime = currTime.toISOString();
+    Events.find({eventType: "Tee Time", dateTime: { '$gt': refTime } }, function (err, events) {
         res.json(events);
     });
 });
@@ -105,7 +130,23 @@ app.post('/events/add', function (req, res) {
     });
 });
 
-app.get('/events/findDup', function(req, res) {
+//==============================================================================================
+// "/events/update" route handler (PUT)
+//==============================================================================================
+
+app.put('/events/update', function (req, res) {
+    'use strict';
+    console.log('Route handler for /events/update');
+    Events.findByIdAndUpdate(req.body._id, req.body, function (err, data) {
+        res.json(data);
+    });
+});
+
+//==============================================================================================
+// "/events/findDup" route handler - GETs events with specified date/time, type, and course
+//==============================================================================================
+
+app.get('/events/findDup', function (req, res) {
     'use strict';
     console.log('Route handler for /events/findDup');
     Events.find({ eventType: req.body.type, dateTime: req.body.date, courseId: req.body.crs }, function (err, events) {
@@ -115,9 +156,35 @@ app.get('/events/findDup', function(req, res) {
 });
 
 //==============================================================================================
+// "/events/removeEvent/:eventId" route handler
+//==============================================================================================
+
+app['delete']('/events/removeEvent/:eventId', function (req, res) {
+    'use strict';
+    console.log('Route handler for /events/removeEvent/:', req.params.eventId);
+    Events.findById(req.params.eventId).remove(function (err, data) {
+        res.json(data);
+    });
+});
+
+//==============================================================================================
+// "/events/teeTime/:id" route handler  
+//==============================================================================================
+
+app.get('/events/teeTime/:teeTimeId', function (req, res) {
+    'use strict';
+    console.log('Route handler for /events/teeTime/:', req.params.teeTimeId);
+    console.log('params: ', req.params);
+    Events.findById(req.params.teeTimeId, function (err, event) {
+        res.json(event);
+    });
+});
+
+//==============================================================================================
 //  Tee-related routes:
 //      /tees/:teeId - retrieves a specific tee by ID
-//      /tees/:courseId - retrieves all tees for a specific course
+//      /defaultTee - provides a default tee box (for courses with no defined tee boxes)
+//      /teesByCourse/:courseId - retrieves all tees for a specific course
 //==============================================================================================
 
 //==============================================================================================
@@ -132,19 +199,41 @@ app.get('/tees/:teeId', function (req, res) {
 });
 
 //==============================================================================================
-// "/tees/:courseId" route handler  
+// "/defaultTee" route handler  
+//==============================================================================================
+
+app.get('/defaultTee', function (req, res) {
+    'use strict';
+    console.log('Route handler for /defaultTee');
+    Tees.find({ teeName: "DEFAULT" }, function (err, data) {
+        if (err) {
+            console.log("Mongoose error querying default tee box info");
+            console.log("Error: ", err);
+            res.status(400);
+            res.json({error: err});
+        } else {
+            console.log("Default Tee box data retrieved: ", data);
+            res.status(201);
+            res.json(data);
+        }
+    });
+});
+
+
+//==============================================================================================
+// "/teesByCourse/:courseId" route handler  
 //==============================================================================================
 app.get('/teesByCourse/:courseId', function (req, res) {
     'use strict';
     console.log('Route handler for /teesByCourse/:' + req.params.courseId);
-    Tees.find({ "courseId": req.params.courseId }, function (err, tees) {
-        console.log('Returned tee data: ', tees);
+    Tees.find({ courseId: req.params.courseId }).sort('-rating').exec(function (err, tees) {
+        console.log("Tees: ", tees);
         res.json(tees);
     });
 });
 
 //==============================================================================================
-// "/updateTee/:id" PUT route handler
+// "/updateTee" PUT route handler
 //==============================================================================================
 app.put('/updateTee', function (req, res) {
     'use strict';
@@ -187,6 +276,18 @@ app.post('/addTee', function (req, res) {
             res.status(201);
             res.json(data);
         }
+    });
+});
+
+//==============================================================================================
+// "/tees/removeTee/:teeId" route handler
+//==============================================================================================
+
+app['delete']('/tees/removeTee/:teeId', function (req, res) {
+    'use strict';
+    console.log('Route handler for /tees/removeTee/:', req.params.teeId);
+    Tees.findById(req.params.teeId).remove(function (err, data) {
+        res.json(data);
     });
 });
 
@@ -391,6 +492,7 @@ app.put('/courses/updateCourse', function (req, res) {
 //      /rounds/:courseId - retrieves rounds for specific course
 //      /rounds/:date - retrieves rounds for specific date
 //      /round/:roundId - retrieves specific round
+//      //round/removeRound/:roundId - removes a specific round
 //      /postRound - posts a new round in the database
 //      /putRound - updates an existing round in the database
 //==============================================================================================
@@ -489,6 +591,16 @@ app.get('/round/:roundId', function (req, res) {
     });
 });
 
+//==============================================================================================
+// "/round/:roundId" GET route handler  
+//==============================================================================================
+app['delete']('/round/removeRound/:roundId', function (req, res) {
+    'use strict';
+    console.log('Route handler for /rounds/removeRound/:', req.params.roundId);
+    Rounds.findById(req.params.roundId).remove(function (err, data) {
+        res.json(data);
+    });
+});
 
 //==============================================================================================
 // Start listening on assigned port for application requests.

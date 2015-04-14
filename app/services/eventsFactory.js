@@ -1,27 +1,46 @@
+/*jslint nomen: true, plusplus: true*/
+/*global console, require, process, __dirname, angular*/
+
 (function () {
     'use strict';
     var eventsFactory = function ($http, $log) {
         
         var factory = {};
         
-        factory.getScheduledTeeTimes = function (refTime) {
-            return $http.get('/events/teeTimes/after/' + refTime);
+        factory.getFutureEvents = function (playerId) {
+            return $http.get('/events/getFutureEvents');
         };
         
-        factory.getPastTeeTimes = function (refTime) {
-            return $http.get('/events/teeTimes/before/' + refTime);
+        factory.getScheduledTeeTimes = function () {
+            return $http.get('/events/teeTimes/future');
         };
         
-        factory.addEvent = function(event) {
+        factory.getPastTeeTimes = function () {
+            return $http.get('/events/teeTimes/past');
+        };
+        
+        factory.getTeeTime = function (teeTimeId) {
+            return $http.get('/events/teeTime/' + teeTimeId);
+        };
+        
+        factory.addEvent = function (event) {
             return $http.post('/events/add', event);
         };
         
-        factory.getDuplicateEvent = function(date, type, courseId) {
+        factory.updateEvent = function (event) {
+            return $http.put('/events/update', event);
+        };
+        
+        factory.getDuplicateEvent = function (date, type, courseId) {
             var event = {};
             event.date = date;
             event.type = type;
             event.crs = courseId;
             return $http.get('/events/findDup', event);
+        };
+        
+        factory.removeEvent = function (eventId) {
+            return $http.delete('/events/removeEvent/' + eventId);
         };
         
         return factory;

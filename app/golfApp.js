@@ -1,3 +1,5 @@
+/*global angular */
+
 (function () {
     'use strict';
     var app = angular.module('golfApp', ['ngRoute', 'ngSanitize', 'ui.select']);
@@ -35,9 +37,9 @@
                 controller: 'PlayersController',
                 templateUrl: 'app/views/players.html'
             })
-            .when('/rounds/:playerId', {
-                controller: 'PlayerDetailsController',
-                templateUrl: 'app/views/rounds.html'
+            .when('/playerDetails/:playerId', {
+                controller: 'ViewPlayerController',
+                templateUrl: 'app/views/viewPlayer.html'
             })
             .when('/addRound/:playerId', {
                 controller: 'AddRoundController',
@@ -54,6 +56,10 @@
             .when('/addTeeTime', {
                 controller: 'AddTeeTimeController',
                 templateUrl: 'app/views/addTeeTime.html'
+            })
+            .when('/editTeeTime/:teeTimeId', {
+                controller: 'EditTeeTimeController',
+                templateUrl: 'app/views/editTeeTime.html'
             })
             .otherwise({ redirectTo: '/' });
     });

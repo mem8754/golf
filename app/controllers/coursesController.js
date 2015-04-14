@@ -1,6 +1,8 @@
+/*global angular */
+
 (function () {
     'use strict';
-    var CoursesController = function ($scope, coursesFactory) {
+    var CoursesController = function ($scope, $log, coursesFactory) {
         $scope.cSortBy = 'name';
         $scope.cReverse = false;
         $scope.courses = [];
@@ -11,11 +13,8 @@
                     $scope.courses = courses;
                 })
                 .error(function (data, status, headers, config) {
-                    console.log('Error on AJAX call for getCourses!');
-                    console.log('Data: ' + data);
-                    console.log('Status: ' + status);
-                    console.log('Headers: ' + headers);
-                    console.log('Config: ' + config);
+                    $log.warn('Server error getting Courses: ', status);
+                    $log.warn('Data: ' + data);
                 });
         }
         
@@ -31,7 +30,7 @@
         };
     };
     
-    CoursesController.$inject = ['$scope', 'coursesFactory'];
+    CoursesController.$inject = ['$scope', '$log', 'coursesFactory'];
 
     angular.module('golfApp')
         .controller('CoursesController', CoursesController);

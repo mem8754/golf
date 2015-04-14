@@ -1,16 +1,17 @@
+/*jslint node: true, nomen: true */
+/*global angular */
+
 (function () {
     'use strict';
-    var EditCourseController = function ($scope, $routeParams, coursesFactory, roundsFactory) {
+    var EditCourseController = function ($scope, $window, $log, $routeParams, coursesFactory, roundsFactory) {
         var courseId = $routeParams.courseId;
         $scope.course = null;
-        $scope.cMsg1 = "";
         
         function init() {
             coursesFactory.getCourse(courseId)
                 .error(function (data, status, headers, config) {
-                    console.log('Error on AJAX call for getCourse: ', status);
-                    console.log('Data: ' + data);
-                    $scope.cMsg1 = "Server error reading course.";
+                    $log.warn('Server error getting Course data: ', status);
+                    $log.warn('Data: ' + data);
                 })
                 .success(function (course) {
                     $scope.course = course;
@@ -22,16 +23,17 @@
         $scope.updateCourse = function () {
             coursesFactory.updateCourse($scope.course)
                 .error(function (data, status, headers, config) {
-                    console.log('Error updating Course: ', course.tag);
-                    $scope.cMsg1 = "Server error updating course.";
+                    $log.warn('Error updating Course: ', status);
+                    $log.warn("Data: ", data);
+                    $window.alert("Server error updating course in database.");
                 })
                 .success(function (data) {
-                    $scope.cMsg1 = "Course successfully updated.";
+                    $window.alert("Course successfully updated.");
                 });
         };
     };
     
-    EditCourseController.$inject = ['$scope', '$routeParams', 'coursesFactory'];
+    EditCourseController.$inject = ['$scope', '$window', '$log', '$routeParams', 'coursesFactory'];
 
     angular.module('golfApp')
         .controller('EditCourseController', EditCourseController);

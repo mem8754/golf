@@ -1,3 +1,6 @@
+/*jslint node: true, nomen: true */
+/*global angular */
+
 (function () {
     'use strict';
     var AddTeeTimeController = function ($scope, $window, $log, eventsFactory, coursesFactory, playersFactory) {
@@ -25,7 +28,8 @@
                             $log.warn("Add Tee Time - server error reading player info: ", status);
                         })
                         .success(function (players) {
-                            for (i in players) {
+                            var i = 0;
+                            for (i = 0; i < players.length; i += 1) {
                                 players[i].lastName = players[i].lastName + ", " + players[i].firstName;
                             }
                             $scope.players = players;
@@ -67,7 +71,7 @@
                             $window.alert("Server error adding tee time.");
                         })
                         .success(function (data) {
-                            $log.info ("Data: ", data);
+                            $log.info("Data: ", data);
                             $window.alert("Tee Time event successfully added to database.");
                         });
                 });
